@@ -7,31 +7,8 @@ services:
     startCommand: "java -jar target/*.jar"
     envVars:
       - key: DB_URL
-        value: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        value: jdbc:mysql://<HOST>:3306/<DB_NAME>?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - key: DB_USER
-        fromDatabase:
-          name: ecommerce-store-db
-          property: user
+        value: <USERNAME>
       - key: DB_PASS
-        fromDatabase:
-          name: ecommerce-store-db
-          property: password
-      - key: DB_HOST
-        fromDatabase:
-          name: ecommerce-store-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: ecommerce-store-db
-          property: port
-      - key: DB_NAME
-        fromDatabase:
-          name: ecommerce-store-db
-          property: database
-
-databases:
-  - name: ecommerce-store-db
-    plan: free
-    databaseName: ecommerce_store
-    user: ecommerce_user
-    engine: mysql
+        value: <PASSWORD>
