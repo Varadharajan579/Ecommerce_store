@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecom</title>
+</head>
+<body>
+<section>
+    <div class="container-fluid p-5">
+
+        <!-- Top Buttons -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <a th:href="@{'/admin/add-product'}" class="btn btn-danger">
+					
+                    <i class="fa fa-plus"></i> Add Product
+                </a>
+            </div>
+        </div>
+
+        <!-- Session Messages -->
+        <div class="row">
+            <div class="col-md-12">
+                <th:block th:if="${session.successMsg}">
+                    <div class="alert alert-success text-center fw-bold">
+                        [[${session.successMsg}]]
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </div>
+                </th:block>
+                <th:block th:if="${session.errorMsg}">
+                    <div class="alert alert-danger text-center fw-bold">
+                        [[${session.errorMsg}]]
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Add Category Card -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card custom-card-shadow">
+                    <div class="card-header text-center">
+                        <p class="fs-5 mb-0">Add Category</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card custom-card-shadow">
+                    <div class="card-header text-center fs-4">List of Products</div>
+                    <div class="card-body">
+
+                        <th:block th:if="${#lists.isEmpty(productList)}">
+                            <p class="text-center text-muted">No products available.</p>
+                        </th:block>
+
+                        <th:block th:unless="${#lists.isEmpty(productList)}">
+                            <table class="table table-bordered table-hover text-center">
+                               <table class="table">
+    <thead>
+        <tr>
+            <th scope="col">SL No.</th>
+            <th scope="col">Image</th>
+            <th scope="col">Title</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Discount Price</th>
+            <th scope="col">Status</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="product, count : ${productList}">
+            <th scope="row">[[${count.count}]]</th>
+            <td>
+                <img th:src="@{'/img/product_image/' + ${product.productImage}}" width="50px" height="50px">
+            </td>
+            <td>[[${product.productTitle}]]</td>
+            <td>[[${product.productCategory}]]</td>
+            <td>[[${product.productPrice}]]</td>
+            <td>[[${product.discount}]]%</td>
+            <td>[[${product.discountPrice}]]</td>
+            <td>
+                <span th:text="${product.isActive} ? 'Active' : 'Inactive'"></span>
+            </td>
+            <td>[[${product.productStock}]]</td>
+            <td>[[${product.quantity}]]</td>
+            <td>
+                <a th:href="@{'/admin/edit-product/' + ${product.id}}" class="btn btn-info btn-sm">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                &nbsp;
+                <a th:href="@{'/admin/delete-product/' + ${product.id}}" 
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure want to delete this?');">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

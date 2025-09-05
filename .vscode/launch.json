@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-EcommerceStoreApplication<ecommerce-store>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mdtalalwasim.ecommerce.EcommerceStoreApplication",
+            "projectName": "ecommerce-store",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
