@@ -4,7 +4,6 @@ services:
     runtime: docker
     plan: free
     buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
     envVars:
       - key: DB_URL
         value: jdbc:mysql://<HOST>:3306/<DB_NAME>?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
