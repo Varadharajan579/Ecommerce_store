@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Detail</title>
+</head>
+<body>
+    <h1 th:text="${product.productTitle}">Product Title</h1>
+
+    <p><b>Description:</b> <span th:text="${product.productDescription}"></span></p>
+    <p><b>Category:</b> <span th:text="${product.productCategory}"></span></p>
+    <p><b>Price:</b> ₹<span th:text="${product.productPrice}"></span></p>
+    <p><b>Stock:</b> <span th:text="${product.productStock}"></span></p>
+
+    <!-- ✅ Use productImage instead of imageName -->
+    <img th:src="@{'/img/product_image/' + ${product.productImage}}" 
+         alt="Product Image" width="200">
+
+    <br><br>
+    <a th:href="@{/user/cart}">Go to Cart</a>
+</body>
+</html>
