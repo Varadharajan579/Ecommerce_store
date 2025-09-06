@@ -1,26 +1,22 @@
-# Use an official JDK image as base
-FROM openjdk:17-jdk-slim
+# Use an official JDK + Maven image as base
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY mvnw .
-COPY .mvn .mvn
+# Copy pom.xml and download dependencies
 COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Make mvnw executable
-RUN chmod +x mvnw
-
-# Download dependencies
-RUN ./mvnw dependency:go-offline
-
-# Copy the rest of the source code
+# Copy the source code
 COPY src src
 
-# Package the application
-RUN ./mvnw clean package -DskipTests
+# Package the app
+RUN mvn clean package -DskipTests
 
-# Run the application
-# Use shell form so * expands to the actual JAR file
-CMD java -jar target/*.jar
+# Run stage
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+CMD ["java", "-jar", "app.jar"]
