@@ -6,9 +6,13 @@ services:
     branch: main
     autoDeploy: true
     envVars:
-      - key: DB_URL
+      - key: SPRING_DATASOURCE_URL
         value: jdbc:postgresql://dpg-d2tg996r433s73dd470g-a.oregon-postgres.render.com:5432/dbecommerce_h40z
-      - key: DB_USER
+      - key: SPRING_DATASOURCE_USERNAME
         value: dbecommerce_h40z_user
-      - key: DB_PASS
+      - key: SPRING_DATASOURCE_PASSWORD
         value: SyZVf8Shbkfo4x9kdGNny6tPApeJJnKW
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_JPA_DATABASE_PLATFORM
+        value: org.hibernate.dialect.PostgreSQLDialect
