@@ -123,7 +123,8 @@ public class AdminViewController {
         if (categoryById.isPresent()) {
             Category oldCategory = categoryById.get();
             oldCategory.setCategoryName(category.getCategoryName());
-            oldCategory.setIsActive(category.getIsActive());
+oldCategory.setActive(category.isActive());
+
 
             String imageName = file.isEmpty() ? oldCategory.getCategoryImage() : file.getOriginalFilename();
             oldCategory.setCategoryImage(imageName);
