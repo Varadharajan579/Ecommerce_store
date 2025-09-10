@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Table; // Import the Table annotation
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,56 +19,52 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Table(name = "users") // Add this annotation with a different name
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @ToString
 public class User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	private String name;
-	
-	private String mobile;
-	@Column(unique = true, nullable = false)
-private String email;
-
-	
-	private String address;
-	
-	private String city;
-	
-	private String state;
-	
-	private String pinCode;
-	
-	private String password;
-	
-	private String profileImage;
-	
-	private String role;
-	
-	private Boolean isEnable;
-	
-	//implement user account lock for wrong password
-	private Boolean accountStatusNonLocked;
-	
-	private Integer accountfailedAttemptCount;
-	
-	private Date accountLockTime;
-	
-	private String resetTokens;
-	
-	@CreationTimestamp
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    private String mobile;
+    @Column(unique = true, nullable = false)
+    private String email;
+    
+    private String address;
+    
+    private String city;
+    
+    private String state;
+    
+    private String pinCode;
+    
+    private String password;
+    
+    private String profileImage;
+    
+    private String role;
+    
+    private Boolean isEnable;
+    
+    //implement user account lock for wrong password
+    private Boolean accountStatusNonLocked;
+    
+    private Integer accountfailedAttemptCount;
+    
+    private Date accountLockTime;
+    
+    private String resetTokens;
+    
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-	
-	
-	
-	
 }
