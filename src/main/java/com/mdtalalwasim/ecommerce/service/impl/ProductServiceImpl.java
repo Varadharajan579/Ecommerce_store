@@ -23,6 +23,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+     public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+     }
 
     // ✅ Save new product with image
     @Override
