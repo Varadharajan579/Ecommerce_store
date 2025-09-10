@@ -4,16 +4,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class SecurityConfig {
@@ -25,42 +25,28 @@ public class SecurityConfig {
     @Lazy
     AuthenticationFailureHandler authenticationFailureHandler;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // DB-based UserDetailsService (customers)
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
-
-    // In-memory admin user
     @Bean
     public UserDetailsService inMemoryUserDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User.withUsername("admin@example.com")
-                               .password(passwordEncoder().encode("Admin@123"))
-                               .roles("ADMIN")
-                               .build());
+                .password(passwordEncoder().encode("Admin@123"))
+                .roles("ADMIN")
+                .build());
         return manager;
     }
 
-    // DAO Authentication Provider for DB users
     @Bean
-    public DaoAuthenticationProvider userAuthenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService()); // DB users
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    // DAO Authentication Provider for admin
-    @Bean
-    public DaoAuthenticationProvider adminAuthenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(inMemoryUserDetailsService()); // admin
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -85,13 +71,9 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/signin?logout")
                 .permitAll()
-            );
-
-        // Register both authentication providers
-        http.authenticationProvider(adminAuthenticationProvider());
-        http.authenticationProvider(userAuthenticationProvider());
+            )
+            .authenticationProvider(authenticationProvider());
 
         return http.build();
-        
     }
 }

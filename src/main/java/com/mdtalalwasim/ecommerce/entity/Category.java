@@ -18,16 +18,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "categories")  // safer for PostgreSQL
+@Table(name = "categories")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
 public class Category {
-	
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // works in MySQL & PostgreSQL
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "category_name", nullable = false)
@@ -37,7 +37,7 @@ public class Category {
     private String categoryImage;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;  // default true
+    private boolean isActive = true;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
