@@ -26,25 +26,27 @@ public class SecurityConfig {
     AuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService; // your UserDetailsServiceImpl (DB)
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // ✅ In-memory admin user
     @Bean
-    public UserDetailsService inMemoryUserDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin@example.com")
-                .password(passwordEncoder().encode("Admin@123"))
-                .roles("ADMIN")
-                .build());
-        return manager;
+    public InMemoryUserDetailsManager inMemoryUserDetailsService() {
+        return new InMemoryUserDetailsManager(
+                User.withUsername("admin@example.com")
+                        .password(passwordEncoder().encode("Admin@123"))
+                        .roles("ADMIN")
+                        .build()
+        );
     }
 
+    // ✅ DB-based authentication provider
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider dbAuthProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -66,13 +68,19 @@ public class SecurityConfig {
                 .usernameParameter("username")
                 .failureHandler(authenticationFailureHandler)
                 .successHandler(authenticationSuccessHandler)
+                .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/signin?logout")
                 .permitAll()
             )
-            .authenticationProvider(authenticationProvider());
+            // ✅ Register both providers
+            .authenticationProvider(dbAuthProvider())
+            .authenticationProvider(new DaoAuthenticationProvider() {{
+                setUserDetailsService(inMemoryUserDetailsService());
+                setPasswordEncoder(passwordEncoder());
+            }});
 
         return http.build();
     }

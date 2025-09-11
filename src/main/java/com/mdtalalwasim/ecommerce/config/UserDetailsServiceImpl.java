@@ -1,7 +1,6 @@
 package com.mdtalalwasim.ecommerce.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,21 +15,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    @Qualifier("inMemoryUserDetailsService")
-    private UserDetailsService inMemoryUserDetailsService;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        try {
-            return inMemoryUserDetailsService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException e) {
-            // Fallback to database lookup if not found in-memory
-        }
-
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User NOT Found for :" + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User NOT Found for: " + username));
 
-        return new CustomUser(user);
+        return new CustomUser(user); // your custom UserDetails wrapper
     }
 }
