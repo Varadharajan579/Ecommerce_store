@@ -96,17 +96,12 @@ public class AdminViewController {
         return "redirect:/admin/category";
     }
 
-    @GetMapping("/category")
-    public String category(Model model) {
-        List<Category> allCategories = categoryService.getAllCategories();
-        for (Category category : allCategories) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            String format = formatter.format(category.getCreatedAt());
-            model.addAttribute("formattedDateTimeCreatedAt", format);
-        }
-        model.addAttribute("allCategoryList", allCategories);
-        return "/admin/category/category-home";
-    }
+   @GetMapping("/category")
+public String category(Model model) {
+    model.addAttribute("allCategoryList", categoryService.getAllCategories());
+    return "admin/category/category-home";
+}
+
 
     @GetMapping("/edit-category/{id}")
     public String editCategoryForm(@PathVariable("id") long id, Model model) {
