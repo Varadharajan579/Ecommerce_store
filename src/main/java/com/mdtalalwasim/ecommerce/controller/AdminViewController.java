@@ -146,14 +146,10 @@ oldCategory.setActive(category.isActive());
     }
 
     // ================= PRODUCT MODULE =================
-
- @GetMapping("/add-product")
+@GetMapping("/add-product")
 public String addProduct(Model model) {
-    // Always provide a non-null list to the template
     model.addAttribute("allCategoryList", categoryService.getAllCategories());
-    
-    // Match the template location correctly
-    return "admin/add-product";  // ✅ not "/admin/product/add-product"
+    return "admin/product/add-product";  // ✅ matches templates/admin/product/add-product.html
 }
 
 
@@ -172,7 +168,7 @@ public String addProduct(Model model) {
 @GetMapping("/product-list")
 public String productList(Model model) {
     model.addAttribute("productList", productService.getAllProducts());
-    return "admin/product-list";  // ✅ points to templates/admin/product-list.html
+    return "admin/product/product-list";  // ✅ matches templates/admin/product/product-list.html
 }
 
     @GetMapping("/delete-product/{id}")
