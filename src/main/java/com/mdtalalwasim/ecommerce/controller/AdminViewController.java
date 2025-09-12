@@ -147,11 +147,15 @@ oldCategory.setActive(category.isActive());
 
     // ================= PRODUCT MODULE =================
 
-    @GetMapping("/add-product")
-    public String addProduct(Model model) {
-        model.addAttribute("allCategoryList", categoryService.getAllCategories());
-        return "/admin/product/add-product";
-    }
+ @GetMapping("/add-product")
+public String addProduct(Model model) {
+    // Always provide a non-null list to the template
+    model.addAttribute("allCategoryList", categoryService.getAllCategories());
+    
+    // Match the template location correctly
+    return "admin/add-product";  // ✅ not "/admin/product/add-product"
+}
+
 
     @PostMapping("/save-product")
     public String saveProduct(@ModelAttribute Product product,
@@ -165,12 +169,11 @@ oldCategory.setActive(category.isActive());
         }
         return "redirect:/admin/product-list";
     }
-
-    @GetMapping("/product-list")
-    public String productList(Model model) {
-        model.addAttribute("productList", productService.getAllProducts());
-        return "/admin/product/product-list";
-    }
+@GetMapping("/product-list")
+public String productList(Model model) {
+    model.addAttribute("productList", productService.getAllProducts());
+    return "admin/product-list";  // ✅ points to templates/admin/product-list.html
+}
 
     @GetMapping("/delete-product/{id}")
     public String deleteProduct(@PathVariable("id") long id, HttpSession session) {
